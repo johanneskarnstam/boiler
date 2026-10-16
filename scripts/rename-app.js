@@ -20,7 +20,6 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import readline from 'readline'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
@@ -146,21 +145,9 @@ function updateLoginView(titleCase) {
   console.log(`  LoginView.vue      <h1> -> "${titleCase}"`)
 }
 
-// --- Confirmation prompt ------------------------------------------------------
-
-function confirm(question) {
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
-  return new Promise((resolve) => {
-    rl.question(question, (answer) => {
-      rl.close()
-      resolve(answer.trim().toLowerCase())
-    })
-  })
-}
-
 // --- Main --------------------------------------------------------------------
 
-async function main() {
+function main() {
   const rawName = process.argv[2]
 
   if (!rawName) {
@@ -185,12 +172,6 @@ async function main() {
   console.log(`  Pascal case : ${pascalCase}`)
   console.log('\nFiles to be updated:')
   console.log('  package.json, index.html, vite.config.ts, src/views/LoginView.vue')
-
-  const answer = await confirm('\nProceed? [y/N] ')
-  if (answer !== 'y' && answer !== 'yes') {
-    console.log('Aborted.')
-    process.exit(0)
-  }
 
   console.log('\nApplying changes...')
   updatePackageJson(slug)
